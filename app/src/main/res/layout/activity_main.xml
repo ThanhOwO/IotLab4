@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#c4c4c4">
+    android:background="#5344ca">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="674dp" />
+        android:layout_height="match_parent"
+        app:layout_anchor="@id/bottomBar"/>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomBar"
