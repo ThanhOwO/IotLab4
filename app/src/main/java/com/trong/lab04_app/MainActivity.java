@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -37,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private void addTabs(){
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_control));
+        tabLayout.addTab(tabLayout.newTab());
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_chart));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_dash));
+
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -62,12 +65,14 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control_fill);
                         break;
                     case 2:
-                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_chart_fill);
+                        tabLayout.getTabAt(3).select();// do nothing since the empty tab cannot be selected
                         break;
                     case 3:
-                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_menu_fill);
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart_fill);
                         break;
-
+                    case 4:
+                        tabLayout.getTabAt(4).setIcon(R.drawable.ic_menu_fill);
+                        break;
                 }
             }
 
@@ -81,12 +86,14 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control);
                         break;
                     case 2:
-                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_chart);
+                        // do nothing since the empty tab cannot be selected
                         break;
                     case 3:
-                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_dash);
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart);
                         break;
-
+                    case 4:
+                        tabLayout.getTabAt(4).setIcon(R.drawable.ic_dash);
+                        break;
                 }
             }
 
@@ -101,12 +108,14 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control_fill);
                         break;
                     case 2:
-                        tabLayout.getTabAt(2).setIcon(R.drawable.ic_chart_fill);
+                        // do nothing since the empty tab cannot be selected
                         break;
                     case 3:
-                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_menu_fill);
+                        tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart_fill);
                         break;
-
+                    case 4:
+                        tabLayout.getTabAt(4).setIcon(R.drawable.ic_menu_fill);
+                        break;
                 }
 
             }

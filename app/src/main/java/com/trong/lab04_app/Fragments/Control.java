@@ -2,59 +2,29 @@ package com.trong.lab04_app.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
+import com.trong.lab04_app.Adapters.ViewControlAdapter;
 import com.trong.lab04_app.R;
+import com.trong.lab04_app.ViewPageAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Control#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class Control extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TabLayout optionTabLayout;
+    private ViewPager controlViewPager;
+    ViewControlAdapter controlAdapter;
 
     public Control() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Control.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Control newInstance(String param1, String param2) {
-        Control fragment = new Control();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,5 +32,85 @@ public class Control extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_control, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        init(view);
+        addTabs();
+    }
+
+    private void init(View view){
+        optionTabLayout = view.findViewById(R.id.optionLayout);
+        controlViewPager = view.findViewById(R.id.controlViewpager);
+    }
+
+    private void addTabs(){
+        optionTabLayout.addTab(optionTabLayout.newTab().setIcon(R.drawable.ic_temp));
+        optionTabLayout.addTab(optionTabLayout.newTab().setIcon(R.drawable.ic_water));
+        optionTabLayout.addTab(optionTabLayout.newTab().setIcon(R.drawable.ic_light));
+
+        optionTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+        optionTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+
+        controlAdapter = new ViewControlAdapter(getChildFragmentManager(), optionTabLayout.getTabCount());
+        controlViewPager.setAdapter(controlAdapter);
+
+        controlViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(optionTabLayout));
+
+        optionTabLayout.getTabAt(0).setIcon(R.drawable.ic_temp_fill);
+
+        optionTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                controlViewPager.setCurrentItem(tab.getPosition());
+                switch (tab.getPosition()){
+                    case 0:
+                        optionTabLayout.getTabAt(0).setIcon(R.drawable.ic_temp_fill);
+                        break;
+                    case 1:
+                        optionTabLayout.getTabAt(1).setIcon(R.drawable.ic_water_fill);
+                        break;
+                    case 2:
+                        optionTabLayout.getTabAt(2).setIcon(R.drawable.ic_light_fill);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        optionTabLayout.getTabAt(0).setIcon(R.drawable.ic_temp);
+                        break;
+                    case 1:
+                        optionTabLayout.getTabAt(1).setIcon(R.drawable.ic_water);
+                        break;
+                    case 2:
+                        optionTabLayout.getTabAt(2).setIcon(R.drawable.ic_light);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()){
+                    case 0:
+                        optionTabLayout.getTabAt(0).setIcon(R.drawable.ic_temp_fill);
+                        break;
+                    case 1:
+                        optionTabLayout.getTabAt(1).setIcon(R.drawable.ic_water_fill);
+                        break;
+                    case 2:
+                        optionTabLayout.getTabAt(2).setIcon(R.drawable.ic_light_fill);
+                        break;
+                }
+
+            }
+        });
+
     }
 }

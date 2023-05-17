@@ -29,6 +29,8 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
             case 2:
                 return new Chart();
             case 3:
+                return new Chart();
+            case 4:
                 return new Info();
             default:
                 return null;
@@ -37,7 +39,7 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
 }

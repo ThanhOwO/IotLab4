@@ -29,7 +29,7 @@
             android:layout_marginRight="20dp"
             android:background="@android:color/transparent"
             app:labelVisibilityMode="labeled"
-            app:tabMinWidth="80dp"/>
+            app:tabMinWidth="70dp"/>
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
