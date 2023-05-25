@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +17,21 @@ import android.widget.Toast;
 
 import com.trong.lab04_app.Fragments.API.ApiService;
 import com.trong.lab04_app.Fragments.API.DHTmodel;
+import com.trong.lab04_app.Fragments.API.RetrofitClient;
 import com.trong.lab04_app.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 
 public class Temperature extends Fragment {
 
     private TextView temperatureTextView;
+    private Handler handler;
+    private Runnable runnable;
+    private static final long DELAY_MILLIS = 5000; // 5 seconds
 
 
     public Temperature() {
@@ -45,43 +50,54 @@ public class Temperature extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         temperatureTextView = view.findViewById(R.id.temperatureTextView);
+        handler = new Handler(Looper.getMainLooper());
 
-        //Retrofit builder
+        ApiService methods = RetrofitClient.getRetrofitInstance().create(ApiService.class);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.8:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService api = retrofit.create(ApiService.class);
-
-        Call<DHTmodel> call = api.getTemperature();
-
-        call.enqueue(new Callback<DHTmodel>() {
-            @SuppressLint("SetTextI18n")
+        runnable = new Runnable() {
             @Override
-            public void onResponse(Call<DHTmodel> call, Response<DHTmodel> response) {
-                if (!response.isSuccessful()) {
-                    // Handle unsuccessful response
-                    Toast.makeText(getContext(), "Failed to retrieve temperature data", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            public void run() {
+                Call<DHTmodel> call = methods.getDHT();
 
-                DHTmodel dhtModel = response.body();
-                if (dhtModel != null) {
-                    double data = dhtModel.getTemperature();
-                    temperatureTextView.setText(String.valueOf(data));
-                } else {
-                    // Handle null response body
-                    Toast.makeText(getContext(), "Temperature data is empty", Toast.LENGTH_SHORT).show();
-                }
-            }
+                call.enqueue(new Callback<DHTmodel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onResponse(@NonNull Call<DHTmodel> call, @NonNull Response<DHTmodel> response) {
+                        if (response.isSuccessful()) {
+                            DHTmodel temperatureResponse = response.body();
+                            if (temperatureResponse != null) {
+                                double temperature = temperatureResponse.getTemperature();
+                                temperatureTextView.setText(Double.toString(temperature));
+                            }
+                        } else {
+                            // Handle null response body
+                            Toast.makeText(getContext(), "Temperature data is empty", Toast.LENGTH_SHORT).show();
+                        }
 
-            @Override
-            public void onFailure(Call<DHTmodel> call, Throwable t) {
-                // Handle network failure
-                Toast.makeText(getContext(), "Failed to connect to the server", Toast.LENGTH_SHORT).show();
+                        // Schedule the next execution after the delay
+                        handler.postDelayed(runnable, DELAY_MILLIS);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<DHTmodel> call, @NonNull Throwable t) {
+                        // Handle network failure
+                        Toast.makeText(getContext(), "Failed to connect to the server", Toast.LENGTH_SHORT).show();
+
+                        // Schedule the next execution after the delay
+                        handler.postDelayed(runnable, DELAY_MILLIS);
+                    }
+                });
             }
-        });
+        };
+
+        // Start the initial execution with 0 delay
+        handler.postDelayed(runnable, 0);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Remove the callback when the view is destroyed
+        handler.removeCallbacks(runnable);
     }
 }

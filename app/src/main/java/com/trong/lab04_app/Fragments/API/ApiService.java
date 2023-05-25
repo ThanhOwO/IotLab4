@@ -6,5 +6,8 @@ import retrofit2.http.GET;
 
 public interface ApiService {
     @GET("api/dhtdata")
-    Call<DHTmodel> getTemperature();
+    Call<DHTmodel> getDHT();
+
+    @GET("api/bhdata")
+    Call<BHmodel> getBH();
 }
