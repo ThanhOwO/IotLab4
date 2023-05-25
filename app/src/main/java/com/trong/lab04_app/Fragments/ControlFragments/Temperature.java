@@ -1,13 +1,12 @@
 package com.trong.lab04_app.Fragments.ControlFragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trong.lab04_app.Fragments.API.ApiService;
-import com.trong.lab04_app.Fragments.API.TemperatureResponse;
+import com.trong.lab04_app.Fragments.API.DHTmodel;
 import com.trong.lab04_app.R;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,9 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Temperature extends Fragment {
 
     private TextView temperatureTextView;
-    private Handler handler;
-    private Runnable runnable;
-    private Timer timer;
+
 
     public Temperature() {
         // Required empty public constructor
@@ -51,66 +45,43 @@ public class Temperature extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         temperatureTextView = view.findViewById(R.id.temperatureTextView);
-        handler = new Handler();
 
-        // Create Retrofit instance
+        //Retrofit builder
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.8:8000/") // replace with your actual base URL
+                .baseUrl("http://192.168.1.8:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        // Create ApiService instance
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService api = retrofit.create(ApiService.class);
 
-        // Set up a timer to retrieve the temperature every 5 seconds
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        Call<DHTmodel> call = api.getTemperature();
+
+        call.enqueue(new Callback<DHTmodel>() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void run() {
-                // Make API request
-                Call<TemperatureResponse> call = apiService.getTemperature();
-                call.enqueue(new Callback<TemperatureResponse>() {
-                    @Override
-                    public void onResponse(Call<TemperatureResponse> call, Response<TemperatureResponse> response) {
-                        if (response.isSuccessful()) {
-                            TemperatureResponse temperatureResponse = response.body();
-                            if (temperatureResponse != null) {
-                                Double temperature = temperatureResponse.getTemperature();
-                                updateTemperature(String.valueOf(temperature));
-                                // Use the temperature value as needed
-                                Log.d("temperature", String.valueOf(temperature));
-                            }
-                        } else {
-                            // Handle error case
-                        }
-                    }
+            public void onResponse(Call<DHTmodel> call, Response<DHTmodel> response) {
+                if (!response.isSuccessful()) {
+                    // Handle unsuccessful response
+                    Toast.makeText(getContext(), "Failed to retrieve temperature data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    @Override
-                    public void onFailure(Call<TemperatureResponse> call, Throwable t) {
-                        // Handle network failure
-                    }
-                });
+                DHTmodel dhtModel = response.body();
+                if (dhtModel != null) {
+                    double data = dhtModel.getTemperature();
+                    temperatureTextView.setText(String.valueOf(data));
+                } else {
+                    // Handle null response body
+                    Toast.makeText(getContext(), "Temperature data is empty", Toast.LENGTH_SHORT).show();
+                }
             }
-        }, 0, 5000); // Delay: 0 milliseconds, Period: 5000 milliseconds (5 seconds)
-    }
 
-    private void updateTemperature(final String temperature) {
-        // Run the update on the UI thread
-        handler.post(new Runnable() {
             @Override
-            public void run() {
-                temperatureTextView.setText(temperature);
+            public void onFailure(Call<DHTmodel> call, Throwable t) {
+                // Handle network failure
+                Toast.makeText(getContext(), "Failed to connect to the server", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Cancel the timer when the activity is destroyed
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
     }
 }
