@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class Temperature extends Fragment {
 
         // Create Retrofit instance
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:8000/") // replace with your actual base URL
+                .baseUrl("http://192.168.1.8:8000/") // replace with your actual base URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -74,8 +75,10 @@ public class Temperature extends Fragment {
                         if (response.isSuccessful()) {
                             TemperatureResponse temperatureResponse = response.body();
                             if (temperatureResponse != null) {
-                                String temperature = temperatureResponse.getTemperature();
-                                updateTemperature(temperature);
+                                Double temperature = temperatureResponse.getTemperature();
+                                updateTemperature(String.valueOf(temperature));
+                                // Use the temperature value as needed
+                                Log.d("temperature", String.valueOf(temperature));
                             }
                         } else {
                             // Handle error case
