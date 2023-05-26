@@ -1,5 +1,6 @@
 package com.trong.lab04_app.Fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +11,23 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.trong.lab04_app.Adapters.ViewControlAdapter;
+import com.trong.lab04_app.MqttHandler;
 import com.trong.lab04_app.R;
 import com.trong.lab04_app.ViewPageAdapter;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 
 public class Control extends Fragment {
@@ -22,6 +35,15 @@ public class Control extends Fragment {
     private TabLayout optionTabLayout;
     private ViewPager controlViewPager;
     ViewControlAdapter controlAdapter;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private Switch switchLed1, switchLed2;
+
+    private static final String MQTT_BROKER = "tcp://192.168.1.8:1883";
+    private static final String MQTT_CLIENT_ID = "android_client";
+    private MqttHandler mqttHandler;
+    private static final String MQTT_LED1_TOPIC = "cttt/nhom6/led/n1";
+    private static final String MQTT_LED2_TOPIC = "cttt/nhom6/led/n2";
+
 
     public Control() {
         // Required empty public constructor
@@ -40,11 +62,32 @@ public class Control extends Fragment {
 
         init(view);
         addTabs();
+
+        mqttHandler = new MqttHandler();
+        mqttHandler.connect(MQTT_BROKER, MQTT_CLIENT_ID);
+
+        switchLed1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String message = isChecked ? "1" : "0";
+                publishMessage(MQTT_LED1_TOPIC, message);
+            }
+        });
+
+        switchLed2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String message = isChecked ? "1" : "0";
+                publishMessage(MQTT_LED2_TOPIC, message);
+            }
+        });
     }
 
     private void init(View view){
         optionTabLayout = view.findViewById(R.id.optionLayout);
         controlViewPager = view.findViewById(R.id.controlViewpager);
+        switchLed1 = view.findViewById(R.id.switchLed1);
+        switchLed2 = view.findViewById(R.id.switchLed2);
     }
 
     private void addTabs(){
@@ -113,4 +156,15 @@ public class Control extends Fragment {
         });
 
     }
+
+    @Override
+    public void onDestroy() {
+        mqttHandler.disconnect();
+        super.onDestroy();
+    }
+
+    private void publishMessage(String topic, String message){
+        mqttHandler.publish(topic, message);
+    }
+
 }
