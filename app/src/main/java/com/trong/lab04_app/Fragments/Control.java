@@ -38,7 +38,7 @@ public class Control extends Fragment {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch switchLed1, switchLed2;
 
-    private static final String MQTT_BROKER = "tcp://192.168.1.8:1883";
+    private static final String MQTT_BROKER = "tcp://192.168.1.14:1883";
     private static final String MQTT_CLIENT_ID = "android_client";
     private MqttHandler mqttHandler;
     private static final String MQTT_LED1_TOPIC = "cttt/nhom6/led/n1";

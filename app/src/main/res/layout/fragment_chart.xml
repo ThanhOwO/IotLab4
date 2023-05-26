@@ -3,33 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Chart">
+    tools:context=".Fragments.Chart"
+    android:orientation="vertical">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/gif"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/maintain" />
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="We Are Under Maintenance! "
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="20dp"/>
-    <TextView
-        android:layout_below="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Come back soon :)"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/templinechart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/white"
+            android:layout_margin="15dp"/>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_below="@id/templinechart"
+            android:id="@+id/humibarchart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/white"
+            android:layout_margin="15dp"/>
+
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_below="@id/humibarchart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/lightlinechart"
+            android:background="@color/white"
+            android:layout_margin="15dp"/>
+
+
+
 
 </RelativeLayout>
