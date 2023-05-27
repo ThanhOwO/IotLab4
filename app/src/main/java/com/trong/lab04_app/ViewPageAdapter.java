@@ -2,7 +2,6 @@ package com.trong.lab04_app;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -10,7 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.trong.lab04_app.Fragments.Chart;
 import com.trong.lab04_app.Fragments.Control;
 import com.trong.lab04_app.Fragments.Home;
-import com.trong.lab04_app.Fragments.Info;
+import com.trong.lab04_app.Fragments.Logs;
 
 public class ViewPageAdapter extends FragmentStatePagerAdapter{
 
@@ -31,7 +30,7 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
             case 3:
                 return new Chart();
             case 4:
-                return new Info();
+                return new Logs();
             default:
                 return null;
         }
