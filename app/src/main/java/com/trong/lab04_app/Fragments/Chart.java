@@ -120,6 +120,8 @@ public class Chart extends Fragment {
         LineDataSet lightdataSet = new LineDataSet(light, "Light");
         lightdataSet.setColor(Color.YELLOW);
         lightdataSet.setCircleColor(Color.BLUE);
+        lightdataSet.setFillColor(Color.YELLOW);
+        lightdataSet.setFillAlpha(70);
         LineData lightlineData = new LineData(lightdataSet);
 
         lightLinechart.setData(lightlineData);
