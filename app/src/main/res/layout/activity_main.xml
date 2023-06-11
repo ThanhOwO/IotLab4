@@ -40,6 +40,7 @@
         android:src="@drawable/ic_circle"
         app:maxImageSize="35dp"
         android:backgroundTint="@color/white"
-        app:layout_anchor="@id/bottomBar"/>
+        app:layout_anchor="@id/bottomBar"
+        android:id="@+id/lab6"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

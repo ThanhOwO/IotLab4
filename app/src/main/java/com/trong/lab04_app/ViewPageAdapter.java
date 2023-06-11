@@ -10,6 +10,7 @@ import com.trong.lab04_app.Fragments.Chart;
 import com.trong.lab04_app.Fragments.Control;
 import com.trong.lab04_app.Fragments.Home;
 import com.trong.lab04_app.Fragments.Logs;
+import com.trong.lab04_app.Fragments.Weather;
 
 public class ViewPageAdapter extends FragmentStatePagerAdapter{
 
@@ -26,7 +27,7 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
             case 1:
                 return new Control();
             case 2:
-                return new Chart();
+                return new Weather();
             case 3:
                 return new Chart();
             case 4:

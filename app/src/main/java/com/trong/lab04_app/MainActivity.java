@@ -1,6 +1,8 @@
 package com.trong.lab04_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     ViewPageAdapter pagerAdapter;
+
+    FloatingActionButton lab6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
+        lab6 = findViewById(R.id.lab6);
     }
 
     //Create tab layout for UI
@@ -42,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_chart));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_dash));
 
-
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
@@ -51,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        lab6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Set the selected tab to the third tab
+                tabLayout.getTabAt(2).select();
+            }
+        });
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_fill);
 
@@ -66,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control_fill);
                         break;
                     case 2:
-                        tabLayout.getTabAt(3).select();// do nothing since the empty tab cannot be selected
+                        tabLayout.getTabAt(2);
                         break;
                     case 3:
                         tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart_fill);
@@ -87,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control);
                         break;
                     case 2:
-                        // do nothing since the empty tab cannot be selected
+                        tabLayout.getTabAt(2);
                         break;
                     case 3:
                         tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart);
@@ -109,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         tabLayout.getTabAt(1).setIcon(R.drawable.ic_control_fill);
                         break;
                     case 2:
-                        // do nothing since the empty tab cannot be selected
+                        tabLayout.getTabAt(2);
                         break;
                     case 3:
                         tabLayout.getTabAt(3).setIcon(R.drawable.ic_chart_fill);

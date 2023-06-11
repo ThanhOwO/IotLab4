@@ -10,4 +10,5 @@ public interface ApiService {
 
     @GET("api/bhdata")
     Call<BHmodel> getBH();
+
 }
